@@ -1,0 +1,23 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!1045 &1
+EditorBuildSettings:
+  m_ObjectHideFlags: 0
+  serializedVersion: 2
+  m_Scenes:
+  - enabled: 0
+    path: Assets/Scenes/New MPC spawning method.unity
+    guid: 44bf81f87d76c43c0965fc1eff77aa60
+  - enabled: 0
+    path: Assets/testPrefabs/NewBerlin.unity
+    guid: b9919becc0ae44a0fb3172fdd575aadb
+  - enabled: 0
+    path: Assets/Scenes/Veinna.unity
+    guid: f68fd93b4703c49d6ae44484802b9a2f
+  - enabled: 0
+    path: Assets/Scenes/PointCloud.unity
+    guid: 0163473f0c1314e7c98ed2bd5596b57b
+  - enabled: 1
+    path: Assets/Scenes/Vasa.unity
+    guid: 123c7e42a81984fdda545f9ba935191e
+  m_configObjects: {}

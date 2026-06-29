@@ -1,0 +1,54 @@
+{
+    "mpcPointCloudParameters": {
+        "pathPointCloud": "",
+        "pathNormals": "",
+        "pathMesh": "",
+        "skipEveryNPoints": 200,
+        "offset": 0.10000000149011612
+    },
+    "mpcSpawningParameters": {
+        "chiW1": 0.4399999976158142,
+        "chiW2": 0.4399999976158142,
+        "chiW3": 0.4399999976158142,
+        "distMpc1": 3.0,
+        "distMpc2": 3.0,
+        "distMpc3": 3.0,
+        "minGMpc1": -65.0,
+        "maxGMpc1": -48.0,
+        "minGMpc2": -70.0,
+        "maxGMpc2": -59.0,
+        "minGMpc3": -90.0,
+        "maxGMpc3": -80.0,
+        "mpcParent": "MPCs",
+        "observationPointTag": "OPs"
+    },
+    "radioParameters": {
+        "numFft": 200,
+        "nearbyMpcRadius": 200.0,
+        "fixedUpdateTimeStep": 0.05000000074505806,
+        "thresholdDistance": 6000.0
+    },
+    "physicalParameters": {
+        "powerInMilliWatts": 0.01974126510322094,
+        "noiseLevelInDb": -52.54374313354492,
+        "speedofLight": 299792448.0,
+        "costIraconfc": 5699999744.0,
+        "carrierFrequency": 3500000000.0,
+        "fSubcarriers": 180000.0,
+        "snrAvg": 0.028306487947702409,
+        "mrcSnrAvg": 0.7115247845649719,
+        "groundRefCoeff": 0.7784885764122009,
+        "firstOrderAttenuation": 0.07557076215744019,
+        "secondOrderAttenution": 0.0027184775099158289,
+        "thirdOrderAttenuation": 0.024696486070752145,
+        "useLoSPaths": true,
+        "useFirstOrderPaths": true,
+        "useSecondOrderPaths": true,
+        "useThirdOrderPaths": true,
+        "maxPathDistance": 600.0,
+        "angularSpreadFirstOrder": 0.06109999865293503,
+        "angularSpreadSecondOrder": 0.06109999865293503,
+        "angularSpreadThirdOrder": 0.06109999865293503,
+        "omniAntenna": false
+    }
+}

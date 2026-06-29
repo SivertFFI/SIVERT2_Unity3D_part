@@ -1,0 +1,74 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!1 &7428980615765333044
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 1826124118079233194}
+  - component: {fileID: 7061805357311786958}
+  m_Layer: 0
+  m_Name: ApiToNs3
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 0
+--- !u!4 &1826124118079233194
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 7428980615765333044}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 49.8, y: 2.29, z: 36.4}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 0}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &7061805357311786958
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 7428980615765333044}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: a64164826d54146d69df800c08bba6ed, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  UseNS3Binary: 1
+  LocalNS3Binary: 0
+  DebugNS3: 0
+  EnableCamerasBehindVehicles: 1
+  timeScale: 1
+  allVehicles: []
+  alleNB: []
+  allVehiclesID: 
+  ColorIntersections: 1
+  juncts: []
+  asp: {fileID: 0}
+  vehPos: []
+  tm: 0
+  topicToNS: toNS
+  topicFromNS: fromNS
+  SimStart: 3
+  VehNumToNS: 2
+  InterferenceLevelInDbmPer10Mhz: -120
+  PathToNs3Project: /Users/xxx/xxx/ns-3
+  Stack_v2x_Tech: 0
+  EMI_NS3_scenario: 1
+  UseMeasureEMIData: 0
+  EMImeasuredFile: EMI_sample_data_plus_10dBmuV.csv
+  DisbaleEMIforDemo: 1
+  CITS_scenario: 2
+  isMA: 1
+  PtrToGSCM: {fileID: 0}
+  UseGSCM: 1

@@ -1,0 +1,64 @@
+#pragma kernel CSMain
+
+// Struct to match PathGainResultEntry
+struct PathGainResultEntry
+{
+    int LinkIndex;
+    float2 PathGain;
+};
+
+// Buffer declarations
+int SizeOfH;
+int Paths1GainLength;
+int Paths2GainLength;
+int Paths3GainLength;
+StructuredBuffer<PathGainResultEntry> Paths1Gain;
+StructuredBuffer<PathGainResultEntry> Paths2Gain;
+StructuredBuffer<PathGainResultEntry> Paths3Gain;
+StructuredBuffer<float> InverseLambda;
+RWStructuredBuffer<float2> H;
+RWStructuredBuffer<float4> debugBuffer;
+
+// Helper function to sum path contributions
+float2 SumPathContributions(StructuredBuffer<PathGainResultEntry> PathsParameters, int Subcarrier, int Link, int ArraySize)
+{
+    float totalRe = 0.0f;
+    float totalIm = 0.0f;
+    const float twoPi = 2.0f * 3.14159265f;
+
+    for (int i = 0; i < ArraySize; i++)
+    {
+        if (PathsParameters[i].LinkIndex == Link)
+        {
+            float pathAttenuation = PathsParameters[i].PathGain.x / InverseLambda[Subcarrier];
+            float phase = twoPi * InverseLambda[Subcarrier] * PathsParameters[i].PathGain.y;
+            totalRe += pathAttenuation * cos(phase);
+            totalIm += -pathAttenuation * sin(phase);
+        }
+    }
+
+    return float2(totalRe, totalIm);
+}
+
+[numthreads(64,1,1)]
+void CSMain (uint3 id : SV_DispatchThreadID)
+{
+    int index = id.x;
+    int linkId = index / SizeOfH;
+    int subCarrierId = index % SizeOfH;
+    
+    float2 float2H = float2(0.0f, 0.0f);
+    
+    // Counting paths1
+    float2H += SumPathContributions(Paths1Gain, subCarrierId, linkId, Paths1GainLength);
+    // Counting paths2
+    float2H += SumPathContributions(Paths2Gain, subCarrierId, linkId, Paths2GainLength);
+    // Counting paths3
+    float2H += SumPathContributions(Paths3Gain, subCarrierId, linkId, Paths3GainLength);
+    
+    // Total NLoS channel
+    H[index] = float2H;
+    
+    // Write debug information
+    debugBuffer[index] = float4(float2H.x, float2H.y, linkId, subCarrierId);
+}

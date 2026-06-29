@@ -1,0 +1,36 @@
+{
+    "mpcSpawningParameters": {
+        "chiW1": 0.44,
+        "chiW2": 0.44,
+        "chiW3": 0.44,
+        "distMpc1": 3.0,
+        "distMpc2": 3.0,
+        "distMpc3": 3.0,
+        "maxGMpc1": -48.0,
+        "maxGMpc2": -59.0,
+        "maxGMpc3": -80.0,
+        "minGMpc1": -65.0,
+        "minGMpc2": -70.0,
+        "minGMpc3": -90.0
+    },
+    "physicalParameters": {
+        "angularSpreadFirstOrder": 0.0611,
+        "angularSpreadSecondOrder": 0.0611,
+        "angularSpreadThirdOrder": 0.0611,
+        "carrierFrequency": 3500000000.0,
+        "fSubcarriers": 180000,
+        "firstOrderAttenuation": 0.0755707589549864,
+        "groundRefCoeff": 0.7784885696151217,
+        "maxPathDistance": 600.0,
+        "mrcSnrAvg": 0.7115247586284718,
+        "noiseLevelInDb": -52.54374228167012,
+        "powerInMilliWatts": 0.01974126558149984,
+        "secondOrderAttenution": 0.0027184775890841555,
+        "snrAvg": 0.028306488020794607,
+        "thirdOrderAttenuation": 0.024696485653544285
+    },
+    "radioParameters": {
+        "nearbyMpcRadius": 200.0,
+        "numFft": 200
+    }
+}
