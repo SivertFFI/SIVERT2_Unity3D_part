@@ -159,8 +159,11 @@ using Debug = UnityEngine.Debug;
 
             // TODO: rewrite shell script to pass scenario module name parameter to it directly, thus, having one call shell script.
             Debug.Log("Checking the OS..." );
-//            if (RuntimeInformation.OSDescription.Substring(0,4) == "Unix") // If we running MacOS
-            if (RuntimeInformation.OSDescription.Substring(0,4) == "Unix") // If we running MacOS
+            // NOTE: RuntimeInformation.OSDescription starts with "Unix" on BOTH macOS and Linux under Unity's Mono
+            // runtime, so it must not be used to detect macOS specifically. Use IsOSPlatform instead, otherwise
+            // the macOS-only branch below (hardcoded /Users/... paths, osascript/Terminal.app) also runs on Linux
+            // and crashes with UnauthorizedAccessException / missing "osascript" binary.
+            if (RuntimeInformation.IsOSPlatform(OSPlatform.OSX)) // If we running MacOS
             {
                 Debug.Log("We're running MacOS" );
 
@@ -180,73 +183,27 @@ using Debug = UnityEngine.Debug;
                         RunNrV2xScenarioInNS3(); // New Launcher that creates a directory for the run and copies the binary
                     }
                 }
-                else if (Stack_v2x_Tech == Scenario.LTE_V2X)
-                {
-                  string arg;
-
-                  if (UseNS3Binary) {
-                    #if UNITY_EDITOR
-                        string LibPath = Application.dataPath;
-                        LibPath = LibPath.Replace("Assets", "Packages/SIVERT_NS3_bin");
-
-                    #endif
-                    arg = "-e 'tell app \"Terminal\" to do script \"" + LibPath +  "/NS3DaemonForUnity.sh " + LibPath +  " ns3-dev-CITS-GSCM-SIVERT-lteV2X-spectrum-debug" + "\"'";
-
-                  }
-                  else { // Specify correct path to NS3 is want to add another scenario from NS3
-                    arg = "-e 'tell app \"Terminal\" to do script \"" + PathToNs3Project +  "/NS3DaemonForUnity.sh " + PathToNs3Project + " build/src/wave/examples/ns3-dev-CITS-GSCM-SIVERT-lteV2X-spectrum-debug" + "\"'";
-                  }
-
-                    NS3thread = System.Diagnostics.Process.Start ("osascript",arg);
-
-                }
                 else
                 {
                     Debug.LogError("Scenario for NS3 is incorrectly specified!");
                 }
             }
-//            else if (RuntimeInformation.IsOSPlatform(OSPlatform.Linux)) // If we running Linux -- Not yet updated and verified!
-            if (SystemInfo.operatingSystem.Substring(0,5) == "Linux") // If we running Linux
+            if (RuntimeInformation.IsOSPlatform(OSPlatform.Linux)) // If we running Linux
             {
                 Debug.Log("We're running Linux");
-                if (Stack_v2x_Tech == Scenario.GSCM_11p)
+                if (Stack_v2x_Tech == Scenario.NRV2X)
                 {
-                    
-                    /////// original thread creating process
-                    string LibPath = Application.dataPath;
-                    LibPath = LibPath.Replace("Assets", "Packages/SIVERT_NS3_bin");
-
-                    if (EMI_NS3_scenario)
+                    if (!DebugNS3) // If NS3 debug is activated, NS3 process is started from C++ IDE in debug mode
                     {
-                        ExecuteTerminalCommand("gnome-terminal -x bash -ic 'cd /home/nlyamin/VANETs/Simulations/SIVERT2_dev_editor_upgrade_2020/Packages/SIVERT_NS3_bin; ./NS3DaemonForUnity /home/nlyamin/VANETs/Simulations/NS3_LTH_Linux/ns-3.29 CITS-SIVERT-11p-spectrum-measured-interference-vectorised; bash'");
+                        RunNrV2xScenarioInNS3Linux(); // Linux counterpart of RunNrV2xScenarioInNS3(): creates a run directory and copies the binary
                     }
-                    else
-                    {
-                        ExecuteTerminalCommand("gnome-terminal -x bash -ic 'cd /home/nlyamin/VANETs/Simulations/SIVERT2_dev_editor_upgrade_2020/Packages/SIVERT_NS3_bin; ./NS3DaemonForUnity /home/nlyamin/VANETs/Simulations/NS3_LTH_Linux/ns-3.29 CITS-SIVERT-11p-spectrum; bash'");
-                    }
-                   
-
-
-                    
-                    
-                    
                 }
-                else if (Stack_v2x_Tech == Scenario.LTE_V2X)
+                else if (Stack_v2x_Tech == Scenario.cellular5G)
                 {
-           
-                    
-                    string LibPath = Application.dataPath;
-                    LibPath = LibPath.Replace("Assets", "Packages/SIVERT_NS3_bin");
-                    
-                    if (EMI_NS3_scenario)
+                    if (!DebugNS3) // If NS3 debug is activated, NS3 process is started from C++ IDE in debug mode
                     {
-                        ExecuteTerminalCommand("gnome-terminal -x bash -ic 'cd /home/nlyamin/VANETs/Simulations/SIVERT2_dev_editor_upgrade_2020/Packages/SIVERT_NS3_bin; ./NS3DaemonForUnity /home/nlyamin/VANETs/Simulations/NS3_LTH_Linux/ns-3.29 CITS-GSCM-SIVERT-lteV2X-spectrum; bash'");
+                        Run5gScenarioInNS3Linux(); // Linux counterpart of Run5gScenarioInNS3(): creates a run directory and copies the binary
                     }
-                    else
-                    {
-                        ExecuteTerminalCommand("gnome-terminal -x bash -ic 'cd /home/nlyamin/VANETs/Simulations/SIVERT2_dev_editor_upgrade_2020/Packages/SIVERT_NS3_bin; ./NS3DaemonForUnity /home/nlyamin/VANETs/Simulations/NS3_LTH_Linux/ns-3.29 CITS-GSCM-SIVERT-lteV2X-spectrum; bash'");
-                    }
-
                 }
                 else
                 {
@@ -757,6 +714,45 @@ using Debug = UnityEngine.Debug;
             NS3thread = Process.Start("osascript", arg);
         }
         
+        // Linux counterpart of Run5gScenarioInNS3(). Same directory/copy logic, but launches the daemon script in a
+        // gnome-terminal window instead of using macOS-only osascript/Terminal.app.
+        public void Run5gScenarioInNS3Linux()
+        {
+            string sceneName = UnityEngine.SceneManagement.SceneManager.GetActiveScene().name;
+            string timestamp = DateTime.Now.ToString("yyyyMMdd_HHmmss");
+            string logDirName = $"{sceneName}_{Stack_v2x_Tech.ToString()}_{timestamp}";
+            string fullLogPath = Path.Combine(pathToNs3ProjectRoot, logBasePath, logDirName);
+
+            Directory.CreateDirectory(fullLogPath);
+
+            string srcBinary = Path.Combine(pathToNs3Binary, ns3BinaryName);
+            string srcScript = Path.Combine(pathToNs3ProjectRoot, shellScriptName);
+            string dstBinary = Path.Combine(fullLogPath, ns3BinaryName);
+            string dstScript = Path.Combine(fullLogPath, shellScriptName);
+
+            // Copy files
+            File.Copy(srcBinary, dstBinary, overwrite: true);
+            File.Copy(srcScript, dstScript, overwrite: true);
+
+            // Ensure both are executable
+            RunBashCommand($"chmod +x \"{dstBinary}\" \"{dstScript}\"");
+
+            // Launch in a new terminal window (gnome-terminal), mirroring what the macOS osascript/Terminal.app
+            // launcher does for Run5gScenarioInNS3().
+            string absLogPath = Path.GetFullPath(fullLogPath);
+            string innerCommand = $"cd \"{absLogPath}\" && ./{shellScriptName} . {ns3BinaryName} > NS_Debug_Log_Activated_Watchers.log 2>&1; exec bash";
+
+            Debug.Log("Starting NS3 thread with command: " + innerCommand);
+            NS3thread = new Process();
+            NS3thread.StartInfo.FileName = "gnome-terminal";
+            NS3thread.StartInfo.UseShellExecute = false;
+            NS3thread.StartInfo.ArgumentList.Add("--");
+            NS3thread.StartInfo.ArgumentList.Add("bash");
+            NS3thread.StartInfo.ArgumentList.Add("-c");
+            NS3thread.StartInfo.ArgumentList.Add(innerCommand);
+            NS3thread.Start();
+        }
+
         public void RunNrV2xScenarioInNS3()
         {
             string sceneName = UnityEngine.SceneManagement.SceneManager.GetActiveScene().name;
@@ -784,6 +780,44 @@ using Debug = UnityEngine.Debug;
 
             Debug.Log("Starting NS3 thread with argument: " + arg);
             NS3thread = Process.Start("osascript", arg);
+        }
+
+        // Linux counterpart of RunNrV2xScenarioInNS3(). Same directory/copy logic as Run5gScenarioInNS3Linux(), but
+        // used for the NRV2X scenario, launching the daemon script in a gnome-terminal window.
+        public void RunNrV2xScenarioInNS3Linux()
+        {
+            string sceneName = UnityEngine.SceneManagement.SceneManager.GetActiveScene().name;
+            string timestamp = DateTime.Now.ToString("yyyyMMdd_HHmmss");
+            string logDirName = $"{sceneName}_{Stack_v2x_Tech.ToString()}_{timestamp}";
+            string fullLogPath = Path.Combine(pathToNs3ProjectRoot, logBasePath, logDirName);
+
+            Directory.CreateDirectory(fullLogPath);
+
+            string srcBinary = Path.Combine(pathToNs3Binary, ns3BinaryName);
+            string srcScript = Path.Combine(pathToNs3ProjectRoot, shellScriptName);
+            string dstBinary = Path.Combine(fullLogPath, ns3BinaryName);
+            string dstScript = Path.Combine(fullLogPath, shellScriptName);
+
+            // Copy files
+            File.Copy(srcBinary, dstBinary, overwrite: true);
+            File.Copy(srcScript, dstScript, overwrite: true);
+
+            // Ensure both are executable
+            RunBashCommand($"chmod +x \"{dstBinary}\" \"{dstScript}\"");
+
+            // Launch in a new terminal window (gnome-terminal), mirroring Run5gScenarioInNS3Linux().
+            string absLogPath = Path.GetFullPath(fullLogPath);
+            string innerCommand = $"cd \"{absLogPath}\" && ./{shellScriptName} . {ns3BinaryName} > NS_Debug_Log_Activated_Watchers.log 2>&1; exec bash";
+
+            Debug.Log("Starting NS3 thread with command: " + innerCommand);
+            NS3thread = new Process();
+            NS3thread.StartInfo.FileName = "gnome-terminal";
+            NS3thread.StartInfo.UseShellExecute = false;
+            NS3thread.StartInfo.ArgumentList.Add("--");
+            NS3thread.StartInfo.ArgumentList.Add("bash");
+            NS3thread.StartInfo.ArgumentList.Add("-c");
+            NS3thread.StartInfo.ArgumentList.Add(innerCommand);
+            NS3thread.Start();
         }
 
         private void RunBashCommand(string command)

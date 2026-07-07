@@ -38,7 +38,7 @@ RenderSettings:
   m_ReflectionIntensity: 1
   m_CustomReflection: {fileID: 0}
   m_Sun: {fileID: 0}
-  m_IndirectSpecularColor: {r: 0.37311924, g: 0.38073963, b: 0.3587269, a: 1}
+  m_IndirectSpecularColor: {r: 0.37311953, g: 0.38074014, b: 0.35872743, a: 1}
   m_UseRadianceAmbientProbe: 0
 --- !u!157 &3
 LightmapSettings:
@@ -22034,8 +22034,8 @@ MonoBehaviour:
   DebugNS3: 0
   ns3BinaryName: ns3.42-cttc-nr-mimo-demo-API-default
   shellScriptName: NS3DaemonForUnity.sh
-  pathToNs3Binary: /Users/nlyamin/WRK/Simulation/SIVERT2/Simulation_Framework_to_release/ns3_Lena/build/contrib/nr/examples
-  pathToNs3ProjectRoot: /Users/nlyamin/WRK/Simulation/SIVERT2/Simulation_Framework_to_release/ns3_Lena
+  pathToNs3Binary: /home/nlyamin/VANETs/Simulations/SIVERT2_pre_release/SIVERT_2_NS3_part/build/contrib/nr/examples
+  pathToNs3ProjectRoot: /home/nlyamin/VANETs/Simulations/SIVERT2_pre_release/SIVERT_2_NS3_part
   logBasePath: NS3_Logs
   EnableCamerasBehindVehicles: 1
   timeScale: 1
@@ -54051,8 +54051,8 @@ MonoBehaviour:
   DebugNS3: 0
   ns3BinaryName: ns3-dev-nr-v2x-SIVERT-demo-default
   shellScriptName: NS3DaemonForUnity.sh
-  pathToNs3Binary: /Users/nlyamin/WRK/Simulation/SIVERT2/Simulation_Framework_to_release/ns3_NR-V2V/build/contrib/nr/examples
-  pathToNs3ProjectRoot: /Users/nlyamin/WRK/Simulation/SIVERT2/Simulation_Framework_to_release/ns3_NR-V2V
+  pathToNs3Binary: /home/nlyamin/VANETs/Simulations/SIVERT2_pre_release/SIVERT_2_NR-V2X_NS3_part/build/contrib/nr/examples
+  pathToNs3ProjectRoot: /home/nlyamin/VANETs/Simulations/SIVERT2_pre_release/SIVERT_2_NR-V2X_NS3_part
   logBasePath: NS3_Logs
   EnableCamerasBehindVehicles: 1
   timeScale: 1
@@ -65642,8 +65642,8 @@ MonoBehaviour:
   trackingPrefab: {fileID: 0}
   showArtefacts: 1
   showLoSPath: 1
-  showFirstOrderPaths: 1
-  showSecondOderPaths: 1
+  showFirstOrderPaths: 0
+  showSecondOderPaths: 0
   showThirdOrderPaths: 0
   eadfFile: {fileID: 4900000, guid: 824f69160e8c04591a37d95e70471f6a, type: 3}
   applicationMode: 
